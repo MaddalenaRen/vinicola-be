@@ -16,6 +16,7 @@ public class Ordine {
     @Enumerated(EnumType.STRING)
     private StatoOrdine stato;
     private LocalDate dataOrdine;
+    private LocalDate dataConsegna;
 
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL)
     private List<BottigliaVino> bottiglieVinoOrdinate;

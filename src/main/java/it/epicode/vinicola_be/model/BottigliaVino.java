@@ -9,6 +9,8 @@ public class BottigliaVino {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String immagineUrl;
+
 
 
     @ManyToOne
@@ -22,4 +24,6 @@ public class BottigliaVino {
     @ManyToOne
     @JoinColumn(name = "ordine_id")
     private Ordine ordine;
+
+
 }
