@@ -35,4 +35,13 @@ public class PostExceptionHandler {
         return error;
     }
 
+    @ExceptionHandler(UnAnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiError handleUnAuthorizedException(UnAnauthorizedException e) {
+        ApiError apiError = new ApiError();
+        apiError.setMessage(e.getMessage());
+        apiError.setDataErrore(LocalDateTime.now());
+        return apiError;
+    }
+
 }
