@@ -18,8 +18,8 @@ public class Ordine {
     private LocalDate dataOrdine;
     private LocalDate dataConsegna;
 
-    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL)
-    private List<BottigliaVino> bottiglieVinoOrdinate;
+    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrdineEtichetta> ordineEtichette;
     @ManyToOne
     private Cliente cliente;
     @ManyToOne

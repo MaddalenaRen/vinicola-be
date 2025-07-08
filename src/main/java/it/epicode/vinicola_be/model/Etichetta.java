@@ -18,7 +18,15 @@ public class Etichetta {
     private double gradazioneAlcolica;
     private LocalDate dataImbottigliamento;
 
-    @OneToMany(mappedBy = "etichetta")
-    private List<BottigliaVino> bottiglie;
+    @ManyToOne
+    @JoinColumn(name = "cantina_id")
+    private Cantina cantina;
+
+    @OneToMany(mappedBy = "etichetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LottoVino> lotti;
+
+
+    @OneToMany(mappedBy = "etichetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrdineEtichetta> ordineEtichette;
 
 }

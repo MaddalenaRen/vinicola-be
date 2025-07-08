@@ -1,11 +1,10 @@
 package it.epicode.vinicola_be.model;
 
 import it.epicode.vinicola_be.enumeration.Regione;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -16,6 +15,9 @@ public class Cantina {
 
     private String nome;
     private Regione regione;
+
+    @OneToMany(mappedBy = "cantina", cascade = CascadeType.ALL)
+    private List<Etichetta> etichette;
 
 
 }

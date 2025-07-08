@@ -23,6 +23,7 @@ public class LottoVino {
     @OneToMany(mappedBy = "lottoVino", cascade = CascadeType.ALL)
     private List<FaseProduzione> fasiProduzione;
 
-    @OneToMany(mappedBy = "lotto", cascade = CascadeType.ALL)
-    private List<BottigliaVino>bottiglieVino;
+    @ManyToOne
+    @JoinColumn(name = "etichetta_id")
+    private Etichetta etichetta;
 }
