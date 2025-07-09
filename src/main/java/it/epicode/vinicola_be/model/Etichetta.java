@@ -25,8 +25,12 @@ public class Etichetta {
     @OneToMany(mappedBy = "etichetta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LottoVino> lotti;
 
+    @ManyToMany
+    @JoinTable(name = "ordine_etichetta")
+    private Ordine ordine;
 
-    @OneToMany(mappedBy = "etichetta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrdineEtichetta> ordineEtichette;
+    @ManyToOne
+    @JoinTable(name = "ordine_etichetta")
+    private Etichetta etichetta;
 
 }
