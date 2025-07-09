@@ -35,7 +35,7 @@ public class ClienteService {
 
     public Cliente getCliente(long idCliente) throws NotFoundException {
         return clienteRepository.findById(idCliente)
-                .orElseThrow(() -> new NotFoundException("Cliente con id: " + idCliente + " non trovato")); // CORRETTO MESSAGGIO
+                .orElseThrow(() -> new NotFoundException("Cliente con id: " + idCliente + " non trovato"));
     }
 
     public Cliente updateCliente(long idCliente, ClienteDto clienteDto) throws NotFoundException {
