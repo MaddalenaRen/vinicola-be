@@ -20,7 +20,7 @@ public class FaseProduzioneController {
     private FaseProduzioneService faseProduzioneService;
 
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FaseProduzione saveFaseProduzione(
             @RequestBody @Valid FaseProduzioneDto faseProduzioneDto,

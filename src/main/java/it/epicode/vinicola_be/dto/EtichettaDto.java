@@ -1,9 +1,8 @@
 package it.epicode.vinicola_be.dto;
 
 import it.epicode.vinicola_be.enumeration.TipologiaVino;
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,6 +10,9 @@ import java.util.List;
 
 @Data
 public class EtichettaDto {
+
+    @NotEmpty(message = "il nome dell'etichetta è obbligatorio")
+    private String nomeEtichetta;
 
     @NotNull(message = "La tipologia di vino è obbligatoria")
     private TipologiaVino tipologiaVino;

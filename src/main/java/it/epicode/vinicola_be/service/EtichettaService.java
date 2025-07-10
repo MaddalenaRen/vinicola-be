@@ -6,9 +6,11 @@ import it.epicode.vinicola_be.exception.NotFoundException;
 import it.epicode.vinicola_be.model.Cantina;
 import it.epicode.vinicola_be.model.Etichetta;
 import it.epicode.vinicola_be.model.LottoVino;
+import it.epicode.vinicola_be.model.Ordine;
 import it.epicode.vinicola_be.repository.CantinaRepository;
 import it.epicode.vinicola_be.repository.EtichettaRepository;
 import it.epicode.vinicola_be.repository.LottoVinoRepository;
+import it.epicode.vinicola_be.repository.OrdineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +29,12 @@ public class EtichettaService {
     private CantinaRepository cantinaRepository;
     @Autowired
     private LottoVinoRepository lottoVinoRepository;
+    @Autowired
+    private OrdineRepository ordineRepository;
 
     public Etichetta saveEtichetta(EtichettaDto etichettaDto) throws NotFoundException {
         Etichetta etichetta = new Etichetta();
+        etichetta.setNomeEtichetta(etichettaDto.getNomeEtichetta());
         etichetta.setTipologiaVino(etichettaDto.getTipologiaVino());
         etichetta.setGradazioneAlcolica(etichettaDto.getGradazioneAlcolica());
         etichetta.setDataImbottigliamento(etichettaDto.getDataImbottigliamento());
@@ -47,6 +52,20 @@ public class EtichettaService {
         return etichettaRepository.save(etichetta);
     }
 
+    public void associaEtichettaAOrdine(Long etichettaId, Long ordineId) throws NotFoundException {
+        Etichetta etichetta = etichettaRepository.findById(etichettaId)
+                .orElseThrow(() -> new NotFoundException("Etichetta non trovata"));
+        Ordine ordine = ordineRepository.findById(ordineId)
+                .orElseThrow(() -> new NotFoundException("Ordine non trovato"));
+
+
+        etichetta.addOrdine(ordine);
+
+        etichettaRepository.save(etichetta);
+        ordineRepository.save(ordine);
+    }
+
+
     public Page<Etichetta> getAllEtichette(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return etichettaRepository.findAll(pageable);
@@ -59,6 +78,7 @@ public class EtichettaService {
 
     public Etichetta updateEtichetta(long idEtichetta, EtichettaDto etichettaDto) throws NotFoundException {
         Etichetta etichettaDaAggiornare = getEtichetta(idEtichetta);
+        etichettaDaAggiornare.setNomeEtichetta(etichettaDto.getNomeEtichetta());
         etichettaDaAggiornare.setTipologiaVino(etichettaDto.getTipologiaVino());
         etichettaDaAggiornare.setGradazioneAlcolica(etichettaDto.getGradazioneAlcolica());
         etichettaDaAggiornare.setDataImbottigliamento(etichettaDto.getDataImbottigliamento());
@@ -77,8 +97,20 @@ public class EtichettaService {
 
     }
 
-    public void deleteEtichetta(long idEtichetta, EtichettaDto etichettaDto) throws NotFoundException {
+    public void deleteEtichetta(long idEtichetta) throws NotFoundException {
         Etichetta etichettaDaRimuovere = getEtichetta(idEtichetta);
         etichettaRepository.delete(etichettaDaRimuovere);
+    }
+
+    public void rimuoviEtichettaDaOrdine(Long etichettaId, Long ordineId) throws NotFoundException {
+        Etichetta etichetta = etichettaRepository.findById(etichettaId)
+                .orElseThrow(() -> new NotFoundException("Etichetta non trovata"));
+        Ordine ordine = ordineRepository.findById(ordineId)
+                .orElseThrow(() -> new NotFoundException("Ordine non trovato"));
+
+        etichetta.removeOrdine(ordine);
+
+        etichettaRepository.save(etichetta);
+        ordineRepository.save(ordine);
     }
 }

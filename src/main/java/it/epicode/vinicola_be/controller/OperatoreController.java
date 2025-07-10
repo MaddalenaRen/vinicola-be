@@ -23,7 +23,7 @@ public class OperatoreController {
     @Autowired
     private OperatoreService operatoreService;
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Operatore saveOperatore(@RequestBody @Validated OperatoreDto operatoreDto,
                                    BindingResult bindingResult) throws ValidationException {

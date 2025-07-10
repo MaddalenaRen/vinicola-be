@@ -22,7 +22,7 @@ public class OrdineController {
     @Autowired
     private OrdineService ordineService;
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Ordine saveOrdine(@RequestBody @Validated OrdineDto ordineDto,
                              BindingResult bindingResult)

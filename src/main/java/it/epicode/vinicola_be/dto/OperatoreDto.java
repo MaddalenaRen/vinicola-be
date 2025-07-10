@@ -15,6 +15,7 @@ public class OperatoreDto {
     @NotEmpty(message = "il reparto è obbligatorio")
     private String reparto;
 
-    @NotNull
+    private String numeroTelefono;
+
     private Long utenteId;
 }

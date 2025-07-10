@@ -22,6 +22,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente saveCliente(@RequestBody @Validated ClienteDto clienteDto,
                                BindingResult bindingResult)

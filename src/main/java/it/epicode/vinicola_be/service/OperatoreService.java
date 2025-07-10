@@ -27,6 +27,7 @@ public class OperatoreService {
         operatore.setNome(operatoreDto.getNome());
         operatore.setCognome(operatoreDto.getCognome());
         operatore.setReparto(operatoreDto.getReparto());
+        operatore.setNumeroTelefono(operatoreDto.getNumeroTelefono());
         operatore.setFasiGestite(new ArrayList<>());
         operatore.setOrdiniGestiti(new ArrayList<>());
 
@@ -48,6 +49,7 @@ public class OperatoreService {
         operatoreDaAggiornare.setNome(operatoreDto.getNome());
         operatoreDaAggiornare.setCognome(operatoreDto.getCognome());
         operatoreDaAggiornare.setReparto(operatoreDto.getReparto());
+        operatoreDaAggiornare.setNumeroTelefono(operatoreDto.getNumeroTelefono());
 
         return operatoreRepository.save(operatoreDaAggiornare);
     }

@@ -15,6 +15,7 @@ public class Operatore {
     private String nome;
     private String cognome;
     private String reparto;
+    private String numeroTelefono;
 
     @OneToOne
     @JoinColumn(name = "utente_id")

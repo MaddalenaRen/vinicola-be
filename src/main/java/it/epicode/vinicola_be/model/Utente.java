@@ -18,14 +18,19 @@ public class Utente implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    private String numeroTelefono;
+
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
 
     @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL)
     private Operatore operatore;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,7 +39,12 @@ public class Utente implements UserDetails {
 
     @Override
     public String getUsername() {
-        return  email;
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -57,4 +67,5 @@ public class Utente implements UserDetails {
         return true;
     }
 }
+
 

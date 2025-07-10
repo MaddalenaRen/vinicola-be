@@ -14,6 +14,7 @@ public class Cantina {
     private int id;
 
     private String nome;
+    @Enumerated(EnumType.STRING)
     private Regione regione;
 
     @OneToMany(mappedBy = "cantina", cascade = CascadeType.ALL)

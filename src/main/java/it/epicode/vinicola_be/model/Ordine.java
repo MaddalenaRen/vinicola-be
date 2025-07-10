@@ -24,4 +24,7 @@ public class Ordine {
     @ManyToOne
     @JoinColumn(name = "operatore_id")
     private Operatore operatore;
+
+    @ManyToMany(mappedBy = "ordini")
+    private List<Etichetta> etichette;
 }
