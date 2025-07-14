@@ -30,6 +30,7 @@ public class ClienteService {
         cliente.setNome(clienteDto.getNome());
         cliente.setCognome(clienteDto.getCognome());
         cliente.setEmail(clienteDto.getEmail());
+        cliente.setNumeroTelefono(clienteDto.getNumeroTelefono());
         cliente.setPartitaIva(clienteDto.getPartitaIva());
         cliente.setTipoCliente(clienteDto.getTipoCliente());
         return clienteRepository.save(cliente);
@@ -56,6 +57,7 @@ public class ClienteService {
         clienteDaAggiornare.setNome(clienteDto.getNome());
         clienteDaAggiornare.setCognome(clienteDto.getCognome());
         clienteDaAggiornare.setEmail(clienteDto.getEmail());
+        clienteDaAggiornare.setNumeroTelefono(clienteDto.getNumeroTelefono());
         clienteDaAggiornare.setPartitaIva(clienteDto.getPartitaIva());
         clienteDaAggiornare.setTipoCliente(clienteDto.getTipoCliente());
         return clienteRepository.save(clienteDaAggiornare);
@@ -65,5 +67,7 @@ public class ClienteService {
         Cliente clienteDaRimuovere = getCliente(idCliente);
         clienteRepository.delete(clienteDaRimuovere);
     }
+
+
 }
 

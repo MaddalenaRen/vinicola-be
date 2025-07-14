@@ -11,10 +11,15 @@ public class ClienteDto {
 
     @NotEmpty(message = "Il cognome è obbligatorio")
     private String cognome;
+
     @NotEmpty(message = "L'email è obbligatoria")
     @Email(message = "Email non valida")
     private String email;
+
+    private String numeroTelefono;
+
     private String partitaIva;
+
     @NotNull(message = "Il tipo cliente è obbligatorio")
     private TipoCliente tipoCliente;
 }

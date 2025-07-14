@@ -17,6 +17,7 @@ public class Cliente {
     private String nome;
     private String cognome;
     private String email;
+    private String numeroTelefono;
     private String partitaIva;
 
     @Enumerated(EnumType.STRING)

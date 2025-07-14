@@ -1,5 +1,6 @@
 package it.epicode.vinicola_be.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.epicode.vinicola_be.enumeration.StatoOrdine;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,12 +20,15 @@ public class Ordine {
     private LocalDate dataConsegna;
 
     @ManyToOne
+    @JsonIgnore
     private Cliente cliente;
 
     @ManyToOne
     @JoinColumn(name = "operatore_id")
+    @JsonIgnore
     private Operatore operatore;
 
     @ManyToMany(mappedBy = "ordini")
+    @JsonIgnore
     private List<Etichetta> etichette;
 }

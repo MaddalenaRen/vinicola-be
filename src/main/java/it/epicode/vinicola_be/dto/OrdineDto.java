@@ -1,14 +1,14 @@
 package it.epicode.vinicola_be.dto;
 
 
-import it.epicode.vinicola_be.enumeration.StatoOrdine;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Data
 public class OrdineDto {
     @NotNull(message = "La quantità è obbligatoria")
@@ -24,4 +24,7 @@ public class OrdineDto {
     private Long clienteId;
 
     private Long operatoreId;
+
+    @NotEmpty(message = "Etichetta è obbligatorio")
+    private List<String> etichette;
 }

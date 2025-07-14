@@ -49,7 +49,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public Cliente updateCliente(@PathVariable long idCliente,
+    public Cliente updateCliente(@PathVariable("id") long idCliente,
                                @RequestBody @Validated ClienteDto clienteDto,
                                BindingResult bindingResult) throws NotFoundException, ValidationException {
         if(bindingResult.hasErrors()){

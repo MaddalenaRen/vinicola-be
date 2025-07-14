@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class LottoVinoDto {
-    @Min(value = 1, message = "La quantità deve essere almeno 1")
+    @Min(value = 100, message = "La quantità deve essere almeno 100")
     private int quantita;
 
     @NotEmpty(message = "Il nome è obbligatorio")
