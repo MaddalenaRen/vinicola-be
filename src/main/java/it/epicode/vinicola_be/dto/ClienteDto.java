@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class ClienteDto {
+
     @NotEmpty(message = "Il nome è obbligatorio")
     private String nome;
 
@@ -22,4 +23,5 @@ public class ClienteDto {
 
     @NotNull(message = "Il tipo cliente è obbligatorio")
     private TipoCliente tipoCliente;
+
 }

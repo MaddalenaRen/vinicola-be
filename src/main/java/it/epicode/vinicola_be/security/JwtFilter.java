@@ -8,8 +8,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +17,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-//da rimuovere
-@ConditionalOnProperty(name = "jwt.enabled", havingValue = "true", matchIfMissing = true)
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtTool jwtTool;
+    private final JwtTool jwtTool;
+
+    public JwtFilter(JwtTool jwtTool) {
+        this.jwtTool = jwtTool;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -40,12 +41,15 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = authorization.substring(7);
 
             jwtTool.ValidateToken(token);
+            System.out.println("Token validato: " + token);
 
             try {
 
                 Utente utente = jwtTool.getUserFromToken(token);
+                System.out.println("Utente validato: " + utente.getUsername());
 
                 if(new AntPathMatcher().match("/create", request.getServletPath())){
+                    System.out.println("Sono nella creazione con ruolo: " + utente.getRuolo());
                     if(!utente.getRuolo().equals(Ruolo.ADMIN)){
                         throw new UnAnauthorizedException("Utente non autorizzato");
                     }
@@ -58,7 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new UnAnauthorizedException("Utente collegato al token non trovato");
             }
 
-
+            System.out.println("Fine autorizzazione");
             filterChain.doFilter(request, response);
         }
     }

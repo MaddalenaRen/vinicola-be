@@ -15,37 +15,21 @@ public class Etichetta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String nomeEtichetta;
     private TipologiaVino tipologiaVino;
     private double gradazioneAlcolica;
     private LocalDate dataImbottigliamento;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "cantina_id")
-    private Cantina cantina;
+
 
     @OneToMany(mappedBy = "etichetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<LottoVino> lotti;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "etichetta_ordine",
-            joinColumns = @JoinColumn(name = "etichetta_id"),
-            inverseJoinColumns = @JoinColumn(name = "ordine_id")
-    )
+    @OneToMany(mappedBy = "etichetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Ordine> ordini;
-
-
-    public void addOrdine(Ordine ordine) {
-        this.ordini.add(ordine);
-        ordine.getEtichette().add(this);
-    }
-
-    public void removeOrdine(Ordine ordine) {
-        this.ordini.remove(ordine);
-        ordine.getEtichette().remove(this);
-    }
 
 }

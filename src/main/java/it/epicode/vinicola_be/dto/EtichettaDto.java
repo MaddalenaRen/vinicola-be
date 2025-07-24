@@ -4,7 +4,6 @@ import it.epicode.vinicola_be.enumeration.TipologiaVino;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,9 +21,6 @@ public class EtichettaDto {
 
     @NotNull(message = "La data di imbottigliamento è obbligatoria")
     private LocalDate dataImbottigliamento;
-
-    @NotNull(message = "L'ID della cantina è obbligatorio")
-    private Long cantinaId;
 
     private List<Long> lottiId;
 

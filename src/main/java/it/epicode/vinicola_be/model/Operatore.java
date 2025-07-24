@@ -1,5 +1,6 @@
 package it.epicode.vinicola_be.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,5 +26,7 @@ public class Operatore {
     private List<FaseProduzione> fasiGestite;
 
     @OneToMany(mappedBy = "operatore")
+    @JsonIgnore
     private List<Ordine> ordiniGestiti;
+
 }

@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping(path = "/fasi-produzione")
 public class FaseProduzioneController {
@@ -44,6 +47,11 @@ public class FaseProduzioneController {
             @RequestParam(defaultValue = "id") String sortBy
     ) {
         return faseProduzioneService.getAllFasiProduzione(page, size, sortBy);
+    }
+
+    @GetMapping("/tipo-fasi")
+    public List<Map<String, String>> getAllTipoFasi() {
+        return faseProduzioneService.getAllTipoFasi();
     }
 
 

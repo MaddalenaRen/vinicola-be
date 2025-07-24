@@ -1,14 +1,17 @@
 package it.epicode.vinicola_be.dto;
 
+import it.epicode.vinicola_be.model.Etichetta;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.List;
 
 @Data
 public class LottoVinoDto {
+
+    private Long id;
+
     @Min(value = 100, message = "La quantità deve essere almeno 100")
     private int quantita;
 
@@ -21,11 +24,8 @@ public class LottoVinoDto {
     @NotEmpty(message = "La varietà dell'uva è obbligatoria")
     private String varietaUva;
 
-    @NotNull(message = "L'ID dell'uva è obbligatorio")
-    private Long uvaId;
+    private String fasiProduzioneIds;
 
-    private List<Long> fasiProduzioneIds;
-
-    @NotNull(message = "L'ID dell'etichetta è obbligatorio")
-    private Long etichettaId;
+    @NotNull(message = "Nome etichetta")
+    private Etichetta etichetta;
 }

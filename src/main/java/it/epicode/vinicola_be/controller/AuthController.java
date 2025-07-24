@@ -35,8 +35,10 @@ public class AuthController {
 
     }
 
-    @GetMapping("/auth/login")
+    @PostMapping("/auth/login")
     public String login(@RequestBody @Validated LoginDto loginDto, BindingResult bindingResult) throws ValidationException, NotFoundException {
+        System.out.println("Chiamata POST /auth/login ricevuta");
+        System.out.println("LoginDto: " + loginDto.getEmail() + " / " + loginDto.getPassword());
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.getAllErrors().stream().
                     map(objectError -> objectError.getDefaultMessage()).

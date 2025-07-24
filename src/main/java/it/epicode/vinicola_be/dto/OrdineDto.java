@@ -1,13 +1,14 @@
 package it.epicode.vinicola_be.dto;
 
 
+import it.epicode.vinicola_be.model.Cliente;
+import it.epicode.vinicola_be.model.Etichetta;
+import it.epicode.vinicola_be.model.Operatore;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class OrdineDto {
@@ -20,11 +21,14 @@ public class OrdineDto {
 
     private LocalDate dataConsegna;
 
-    @NotNull(message = "ClienteId è obbligatorio")
-    private Long clienteId;
+    @NotNull(message = "Cliente è obbligatorio")
+    private Cliente cliente;
 
-    private Long operatoreId;
+    private Operatore operatore;
 
-    @NotEmpty(message = "Etichetta è obbligatorio")
-    private List<String> etichette;
+    @NotNull(message = "Stato è obbligatorio")
+    private String stato;
+
+    @NotNull(message = "Etichetta è obbligatorio")
+    private Etichetta etichetta;
 }

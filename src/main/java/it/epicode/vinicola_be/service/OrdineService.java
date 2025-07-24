@@ -19,19 +19,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
+
 
 @Service
 public class OrdineService {
 
     @Autowired
     private OrdineRepository ordineRepository;
+
     @Autowired
     private OperatoreRepository operatoreRepository;
+
     @Autowired
     private ClienteRepository clienteRepository;
+
     @Autowired
     private EtichettaRepository etichettaRepository;
+
 
     public Ordine saveOrdine(OrdineDto ordineDto) throws NotFoundException {
         Ordine ordine = new Ordine();
@@ -39,25 +43,30 @@ public class OrdineService {
         ordine.setDataOrdine(ordineDto.getDataOrdine());
         ordine.setDataConsegna(ordineDto.getDataConsegna());
         ordine.setStato(StatoOrdine.IN_ATTESA);
-        if (ordineDto.getClienteId() == null) {
+        if (ordineDto.getCliente() == null) {
             throw new NotFoundException("ClienteId non può essere nullo");
         }
-        Cliente cliente = clienteRepository.findById(ordineDto.getClienteId())
-                .orElseThrow(() -> new NotFoundException("Cliente non trovato con id: " + ordineDto.getClienteId()));
+        Cliente cliente = clienteRepository.findById(ordineDto.getCliente().getId())
+                .orElseThrow(() -> new NotFoundException("Cliente non trovato : " + ordineDto.getCliente()));
         ordine.setCliente(cliente);
-        if (ordineDto.getOperatoreId() != null) {
-            Operatore operatore = operatoreRepository.findById(ordineDto.getOperatoreId())
-                    .orElseThrow(() -> new NotFoundException("Operatore non trovato con id: " + ordineDto.getOperatoreId()));
+        if (ordineDto.getOperatore() != null) {
+            Operatore operatore = operatoreRepository.findById(ordineDto.getOperatore().getId())
+                    .orElseThrow(() -> new NotFoundException("Operatore non trovato : " + ordineDto.getOperatore()));
             ordine.setOperatore(operatore);
         }
 
-        List<Etichetta> etichette = ordineDto.getEtichette().stream()
-                .map(nome -> etichettaRepository.findByNomeEtichetta(nome)
-                        .orElseThrow(() -> new NotFoundException("Etichetta non trovata con nome: " + nome)))
-                .toList();
+        Etichetta etichetta = etichettaRepository.findById(ordineDto.getEtichetta().getId()).orElse(null);
+        ordine.setEtichetta(etichetta);
+        System.out.println(etichetta != null ? etichetta.getId() : null);
 
-        ordine.setEtichette(etichette);
-        return ordineRepository.save(ordine);
+        etichetta.getOrdini().add(ordine);
+
+        ordineRepository.save(ordine);
+
+        etichettaRepository.save(etichetta);
+
+
+        return ordine;
     }
 
     public Page<Ordine> getAllOrdini(int page, int size, String sortBy) {
@@ -74,25 +83,20 @@ public class OrdineService {
         ordineDaAggiornare.setQuantita(ordineDto.getQuantita());
         ordineDaAggiornare.setDataOrdine(ordineDto.getDataOrdine());
         ordineDaAggiornare.setDataConsegna(ordineDto.getDataConsegna());
-        ordineDaAggiornare.setStato(StatoOrdine.IN_ATTESA);
-        if (ordineDto.getClienteId() == null) {
+        ordineDaAggiornare.setStato(StatoOrdine.valueOf(ordineDto.getStato()));
+        if (ordineDto.getCliente() == null) {
             throw new NotFoundException("ClienteId non può essere nullo");
         }
-        Cliente cliente = clienteRepository.findById(ordineDto.getClienteId())
-                .orElseThrow(() -> new NotFoundException("Cliente non trovato con id: " + ordineDto.getClienteId()));
+        Cliente cliente = clienteRepository.findById(ordineDto.getCliente().getId())
+                .orElseThrow(() -> new NotFoundException("Cliente non trovato con id: " + ordineDto.getCliente()));
         ordineDaAggiornare.setCliente(cliente);
-        if (ordineDto.getOperatoreId() != null) {
-            Operatore operatore = operatoreRepository.findById(ordineDto.getOperatoreId())
-                    .orElseThrow(() -> new NotFoundException("Operatore non trovato con id: " + ordineDto.getOperatoreId()));
+        if (ordineDto.getOperatore() != null) {
+            Operatore operatore = operatoreRepository.findById(ordineDto.getOperatore().getId())
+                    .orElseThrow(() -> new NotFoundException("Operatore non trovato con id: " + ordineDto.getOperatore()));
             ordineDaAggiornare.setOperatore(operatore);
         }
 
-        List<Etichetta> etichette = ordineDto.getEtichette().stream()
-                .map(nome -> etichettaRepository.findByNomeEtichetta(nome)
-                        .orElseThrow(() -> new NotFoundException("Etichetta non trovata con nome: " + nome)))
-                .toList();
-
-        ordineDaAggiornare.setEtichette(etichette);
+        ordineDaAggiornare.setEtichetta(etichettaRepository.findById(ordineDto.getEtichetta().getId()).orElse(null));
         return ordineRepository.save(ordineDaAggiornare);
     }
 

@@ -12,9 +12,12 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+@PreAuthorize("hasRole('ADMIN')")
 
 @RestController
 @RequestMapping(path = "/clienti")
@@ -28,19 +31,27 @@ public class ClienteController {
                                BindingResult bindingResult)
             throws ValidationException, NotFoundException {
         if (bindingResult.hasErrors()) {
+            System.out.println("Cliente ricevuto: " + clienteDto);
             throw new ValidationException(bindingResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage())
                     .reduce("", (e, s) -> e + s));
+
         }
         return clienteService.saveCliente(clienteDto);
     }
 
     @GetMapping("")
-    public Page<Cliente> getAllClienti(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam(defaultValue = "id") String sortBy){
-
-        return clienteService.getAllClienti(page,size, sortBy);
+    public Page<Cliente> getAllClienti(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) String nome
+    ){
+        if(nome != null && !nome.isEmpty()) {
+            return clienteService.searchByNome(nome, page, size, sortBy);
+        } else {
+            return clienteService.getAllClienti(page, size, sortBy);
+        }
     }
 
     @GetMapping("/{id}")

@@ -9,6 +9,7 @@ import it.epicode.vinicola_be.service.LottoVinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class LottoVinoController {
     private LottoVinoService lottoVinoService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public LottoVino saveLottoVino(@RequestBody @Validated LottoVinoDto lottoVinoDto,
                                    BindingResult bindingResult)
@@ -33,11 +35,17 @@ public class LottoVinoController {
     }
 
     @GetMapping("")
-    public Page<LottoVino> getAllLotti(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size,
-                                       @RequestParam(defaultValue = "id") String sortBy){
-
-        return lottoVinoService.getAllLotti(page,size, sortBy);
+    public Page<LottoVino> getAllLotti(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) String nome
+    ){
+        if(nome != null && !nome.isEmpty()) {
+            return lottoVinoService.searchByNome(nome, page, size, sortBy);
+        } else {
+            return lottoVinoService.getAllLotti(page, size, sortBy);
+        }
     }
 
     @GetMapping("/{id}")
@@ -58,6 +66,7 @@ public class LottoVinoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLotto(@PathVariable("id") Long idLotto) throws NotFoundException {
         lottoVinoService.deleteLotto(idLotto);

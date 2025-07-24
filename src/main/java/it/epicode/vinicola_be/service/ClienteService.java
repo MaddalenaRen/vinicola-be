@@ -36,6 +36,11 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    public Page<Cliente> searchByNome(String nome, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return clienteRepository.findByNomeContainingIgnoreCase(nome, pageable);
+    }
+
     public Page<Cliente> getAllClienti(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return clienteRepository.findAll(pageable);

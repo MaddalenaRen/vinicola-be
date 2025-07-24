@@ -1,6 +1,7 @@
 package it.epicode.vinicola_be.service;
 
 import it.epicode.vinicola_be.dto.FaseProduzioneDto;
+import it.epicode.vinicola_be.enumeration.TipoFase;
 import it.epicode.vinicola_be.exception.NotFoundException;
 import it.epicode.vinicola_be.model.FaseProduzione;
 import it.epicode.vinicola_be.model.LottoVino;
@@ -14,6 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class FaseProduzioneService {
@@ -81,6 +88,16 @@ public class FaseProduzioneService {
     public void deleteFaseProduzione(Long idFase) throws NotFoundException {
         FaseProduzione fase = getFaseProduzione(idFase);
         faseProduzioneRepository.delete(fase);
+    }
+
+    public List<Map<String, String>> getAllTipoFasi(){
+        return Arrays.stream(TipoFase.values()).map(stato -> {
+            Map<String, String> mappa = new HashMap<>();
+            mappa.put("id", stato.key);
+            mappa.put("descrizione", stato.descrizione);
+
+            return mappa;
+        }).collect(Collectors.toList());
     }
 
 }

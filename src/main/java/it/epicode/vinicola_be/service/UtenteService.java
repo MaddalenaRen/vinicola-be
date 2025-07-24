@@ -22,6 +22,10 @@ public class UtenteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public boolean existsByEmail(String email) {
+        return utenteRepository.existsByEmail(email);
+    }
+
 
     public Utente saveUtente(UtenteDto utenteDto){
         Utente utente = new Utente();

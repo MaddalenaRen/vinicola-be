@@ -1,5 +1,6 @@
 package it.epicode.vinicola_be.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.epicode.vinicola_be.enumeration.TipoCliente;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,5 +25,6 @@ public class Cliente {
     private TipoCliente tipoCliente;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<Ordine> ordini;
 }

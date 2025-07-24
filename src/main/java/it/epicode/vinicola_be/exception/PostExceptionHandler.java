@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class PostExceptionHandler {
 
-
-
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
 
@@ -34,6 +32,7 @@ public class PostExceptionHandler {
         error.setDataErrore(LocalDateTime.now());
         return error;
     }
+
 
     @ExceptionHandler(UnAnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

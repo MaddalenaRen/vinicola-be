@@ -2,7 +2,6 @@ package it.epicode.vinicola_be.service;
 
 import it.epicode.vinicola_be.dto.OperatoreDto;
 import it.epicode.vinicola_be.exception.NotFoundException;
-import it.epicode.vinicola_be.model.Cliente;
 import it.epicode.vinicola_be.model.FaseProduzione;
 import it.epicode.vinicola_be.model.Operatore;
 import it.epicode.vinicola_be.model.Ordine;
@@ -19,6 +18,7 @@ import java.util.List;
 
 @Service
 public class OperatoreService {
+
     @Autowired
     private OperatoreRepository operatoreRepository;
 
@@ -32,6 +32,11 @@ public class OperatoreService {
         operatore.setOrdiniGestiti(new ArrayList<>());
 
         return operatoreRepository.save(operatore);
+    }
+
+    public Page<Operatore> searchByNome(String nome, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return operatoreRepository.findByNomeContainingIgnoreCase(nome, pageable);
     }
 
     public Page<Operatore> getAllOperatori(int page, int size, String sortBy) {

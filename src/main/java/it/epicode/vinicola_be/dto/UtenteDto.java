@@ -7,12 +7,16 @@ import lombok.Data;
 
 @Data
 public class UtenteDto {
+
     @NotEmpty(message="il nome non può essere vuoto")
     private String nome;
+
     @Email(message = "Inserisci un indirizzo email valido")
     @NotEmpty(message="email non può essere vuoto")
     private String email;
+
     @NotEmpty(message="password non può essere vuoto")
     private String password;
+
     private Ruolo ruolo;
 }

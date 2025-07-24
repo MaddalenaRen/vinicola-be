@@ -9,6 +9,7 @@ import it.epicode.vinicola_be.service.OrdineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class OrdineController {
     private OrdineService ordineService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Ordine saveOrdine(@RequestBody @Validated OrdineDto ordineDto,
                              BindingResult bindingResult)
@@ -48,7 +50,7 @@ public class OrdineController {
         return ordineService.getOrdine(idOrdine);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{idOrdine}")
     public Ordine updateOrdine(@PathVariable long idOrdine,
                                @RequestBody @Validated OrdineDto ordineDto,
                                BindingResult bindingResult) throws NotFoundException, ValidationException {
@@ -80,6 +82,7 @@ public class OrdineController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrdine(@PathVariable("id") Long idOrdine) throws NotFoundException {
         ordineService.deleteOrdine(idOrdine);

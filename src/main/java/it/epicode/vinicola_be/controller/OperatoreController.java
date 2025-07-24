@@ -10,11 +10,13 @@ import it.epicode.vinicola_be.service.OperatoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@PreAuthorize("hasAnyRole('ADMIN')")
 
 @RestController
 @RequestMapping(path = "/operatori")
@@ -36,10 +38,17 @@ public class OperatoreController {
     }
 
     @GetMapping("")
-    public Page<Operatore> getAllOperatori(@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "10") int size,
-                                           @RequestParam(defaultValue = "id") String sortBy) {
-        return operatoreService.getAllOperatori(page, size, sortBy);
+    public Page<Operatore> getAllOperatori(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) String nome
+    ){
+        if(nome != null && !nome.isEmpty()) {
+            return operatoreService.searchByNome(nome, page, size, sortBy);
+        } else {
+            return operatoreService.getAllOperatori(page, size, sortBy);
+        }
     }
 
     @GetMapping("/{id}")

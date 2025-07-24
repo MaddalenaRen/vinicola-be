@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class OperatoreDto {
+
     @NotEmpty(message = "il nome è obbligatorio")
     private String nome;
 

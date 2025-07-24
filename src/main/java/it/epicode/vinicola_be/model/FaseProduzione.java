@@ -11,6 +11,7 @@ public class FaseProduzione {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Enumerated(EnumType.STRING)
     private TipoFase tipoFase;
     private LocalDate dataInizio;

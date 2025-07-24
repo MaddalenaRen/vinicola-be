@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+@PreAuthorize("hasRole('ADMIN')")
 
 @RestController
 @RequestMapping(path = "/etichette")
@@ -41,11 +44,17 @@ public class EtichettaController {
 
 
     @GetMapping("")
-    public Page<Etichetta> getAllEtichette(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size,
-                                       @RequestParam(defaultValue = "id") String sortBy){
-
-        return etichettaService.getAllEtichette(page,size, sortBy);
+    public Page<Etichetta> getAllEtichetta(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) String nomeEtichetta
+    ){
+        if(nomeEtichetta != null && !nomeEtichetta.isEmpty()) {
+            return etichettaService.searchByNomeEtichetta(nomeEtichetta, page, size, sortBy);
+        } else {
+            return etichettaService.getAllEtichette(page, size, sortBy);
+        }
     }
 
     @GetMapping("/{id}")
@@ -69,12 +78,5 @@ public class EtichettaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEtichetta(@PathVariable("id") Long idEtichetta) throws NotFoundException {
         etichettaService.deleteEtichetta(idEtichetta);
-    }
-
-    @DeleteMapping("/{etichettaId}/ordini/{ordineId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void rimuoviOrdineDaEtichetta(@PathVariable Long etichettaId, @PathVariable Long ordineId)
-            throws NotFoundException {
-        etichettaService.rimuoviEtichettaDaOrdine(etichettaId, ordineId);
     }
 }

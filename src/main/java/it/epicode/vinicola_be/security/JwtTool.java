@@ -27,7 +27,6 @@ public class JwtTool {
                 .subject(utente.getId()+"").signWith(Keys.hmacShaKeyFor(chiaveSegreta.getBytes()))
                 .compact();
 
-
     }
 
 

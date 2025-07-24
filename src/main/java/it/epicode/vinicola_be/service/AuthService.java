@@ -22,8 +22,16 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public String login(LoginDto loginDto) throws NotFoundException {
+
+        System.out.println("Tentativo login con email: " + loginDto.getEmail());
+        System.out.println("Tentativo login con password: " + loginDto.getPassword());
         Utente utente = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("Utente con email: " + loginDto.getEmail() + " non trovato"));
+
+        System.out.println("Login tentato con: " + loginDto.getEmail() + " / " + loginDto.getPassword());
+        System.out.println("Password nel DB (hash): " + utente.getPassword());
+
+        System.out.println("use to save password encoded: " + passwordEncoder.encode(loginDto.getPassword()));
 
         if (passwordEncoder.matches(loginDto.getPassword(), utente.getPassword())) {
             return jwtTool.createToken(utente);

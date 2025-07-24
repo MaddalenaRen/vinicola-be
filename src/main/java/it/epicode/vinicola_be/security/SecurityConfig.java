@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,44 +21,57 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    @Autowired
-//    private JwtFilter jwtFilter;
-//
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                .csrf(csrf -> csrf.disable())
-//                .formLogin(form -> form.disable())
-//                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .cors(Customizer.withDefaults())
-//                .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class) // << AGGIUNTA QUI
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET).permitAll()
-//                        .requestMatchers(HttpMethod.POST).permitAll()
-//                        .anyRequest().denyAll()
-//                );
-//
-//        return httpSecurity.build();
-//    }
-
+    @Bean
+    public JwtFilter jwtFilter(JwtTool jwtTool) {
+        return new JwtFilter(jwtTool);
+    }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.formLogin(http -> http.disable());
-        httpSecurity.csrf(http -> http.disable());
-        httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.cors(Customizer.withDefaults());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/user/**").hasAnyRole("OPERATORE", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/clienti").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/clienti/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/clienti").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/clienti/**").hasAnyRole("ADMIN")
 
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/auth/**").permitAll());
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.GET).permitAll());
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.POST).permitAll());
-        httpSecurity.authorizeHttpRequests(http -> http.anyRequest().permitAll());
+                        .requestMatchers(HttpMethod.POST, "/ordini").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/ordini/**").hasAnyRole("ADMIN", "OPERATORE")
+                        .requestMatchers(HttpMethod.GET, "/ordini").hasAnyRole("ADMIN", "OPERATORE")
+                        .requestMatchers(HttpMethod.GET, "/odini/**").hasAnyRole("ADMIN", "OPERATORE")
+
+                        .requestMatchers(HttpMethod.POST, "/lotti-vino").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/lotti-vino/**").hasAnyRole("ADMIN", "OPERATORE")
+                        .requestMatchers(HttpMethod.GET, "/lotti-vino").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/lotti-vino/**").hasAnyRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/etichette").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/etichette/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/etichette").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/etichette/**").hasAnyRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/operatori").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/operatori/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/operatori").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/operatori/**").hasAnyRole("ADMIN")
 
 
 
-        return httpSecurity.build();
+
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -67,7 +81,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5174"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
