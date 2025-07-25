@@ -74,6 +74,11 @@ public class OrdineService {
         return ordineRepository.findAll(pageable);
     }
 
+    public Page<Ordine> searchByCliente(String cliente, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ordineRepository.findByClienteNomeOrCognome(cliente, pageable);
+    }
+
     public Ordine getOrdine(long idOrdine) throws NotFoundException{
         return ordineRepository.findById(idOrdine).orElseThrow(() -> new NotFoundException("Ordine con id:" + idOrdine + " non trovato"));
     }

@@ -38,11 +38,17 @@ public class OrdineController {
     }
 
     @GetMapping("")
-    public Page<Ordine> getAllOrdini(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam(defaultValue = "id") String sortBy){
-
-        return ordineService.getAllOrdini(page,size, sortBy);
+    public Page<Ordine> getAllOrdini(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) String cliente
+    ) {
+        if (cliente != null && !cliente.isEmpty()) {
+            return ordineService.searchByCliente(cliente, page, size, sortBy);
+        } else {
+            return ordineService.getAllOrdini(page, size, sortBy);
+        }
     }
 
     @GetMapping("/{id}")
